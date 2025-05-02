@@ -1,0 +1,118 @@
+#include <iostream>
+#include <queue>
+#include <thread>
+#include <chrono>
+
+using namespace std;
+
+class Elevator {
+private:
+    int currentFloor;
+    bool goingUp;
+    bool doorsOpen;
+
+public:
+    Elevator() {
+        currentFloor = 0; // Ground floor
+        goingUp = true;
+        doorsOpen = false;
+    }
+
+    int getCurrentFloor() {
+        return currentFloor;
+    }
+
+    void moveToFloor(int targetFloor) {
+        while (currentFloor != targetFloor) {
+            if (currentFloor < targetFloor) {
+                currentFloor++;
+                goingUp = true;
+            } else {
+                currentFloor--;
+                goingUp = false;
+            }
+
+            displayStatus();
+            this_thread::sleep_for(chrono::milliseconds(1000)); // Delay for realism
+        }
+
+        openDoors();
+        this_thread::sleep_for(chrono::milliseconds(2000));
+        closeDoors();
+    }
+
+    void openDoors() {
+        doorsOpen = true;
+        cout << "Doors opening at floor " << currentFloor << "..." << endl;
+    }
+
+    void closeDoors() {
+        doorsOpen = false;
+        cout << "Doors closing..." << endl;
+    }
+
+    void displayStatus() {
+        cout << "Elevator is at floor " << currentFloor
+             << " | Direction: " << (goingUp ? "Up" : "Down")
+             << " | Doors: " << (doorsOpen ? "Open" : "Closed") << endl;
+    }
+};
+
+class Building {
+private:
+    int numFloors;
+    Elevator elevator;
+    queue<int> requestQueue;
+
+public:
+    Building(int floors) {
+        numFloors = floors;
+    }
+
+    void run() {
+        string input;
+        while (true) {
+            cout << "\nEnter floor request (0 to " << numFloors - 1 << ", or 'exit'): ";
+            cin >> input;
+
+            if (input == "exit") {
+                break;
+            }
+
+            int requestedFloor = stoi(input);
+            if (requestedFloor >= 0 && requestedFloor < numFloors) {
+                requestQueue.push(requestedFloor);
+                processRequests();
+            } else {
+                cout << "Invalid floor!" << endl;
+            }
+        }
+
+        cout << "Simulation ended." << endl;
+    }
+
+    void processRequests() {
+        while (!requestQueue.empty()) {
+            int nextFloor = requestQueue.front();
+            requestQueue.pop();
+            elevator.moveToFloor(nextFloor);
+        }
+    }
+};
+
+int main() {
+    cout << "=== Elevator Simulation ===" << endl;
+    int floors;
+    cout << "Enter number of floors in the building (5-20): ";
+    cin >> floors;
+
+    if (floors < 5 || floors > 20) {
+        cout << "Invalid floor count. Defaulting to 10 floors." << endl;
+        floors = 10;
+    }
+
+    Building building(floors);
+    building.run();
+
+    return 0;
+}
