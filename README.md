@@ -1,8 +1,8 @@
 # Elevator_Project_C++
 Group Members: Nicholas Costello, Ryan Farzenah, and Tenz Kunga 
-# 🛗 Elevator Simulation (C++ Console App)
+ Elevator Simulation (C++ Console App)
 
-##  Overview
+ Overview
 
 This is a basic elevator simulation written in C++. It models a single elevator system within a building of 5–20 floors. The program accepts floor requests from the user, simulates the elevator moving between floors, and displays real-time status updates, including floor level, direction, and door status.
 
@@ -13,7 +13,7 @@ This project demonstrates:
 
 ---
 
-##  Features
+ Features
 
 - Accepts user input for floor requests (e.g., 0–9)
 - Elevator automatically moves to the requested floor
@@ -24,7 +24,7 @@ This project demonstrates:
 
 ---
 
-##  Requirements
+  Requirements
 
 - C++ compiler (e.g., `g++`)
 - C++11 or newer
